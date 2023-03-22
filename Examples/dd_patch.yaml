@@ -1,0 +1,10 @@
+# Working example to inject java libraries via patch in deployment
+# Example with with kubectl - kubectl patch deployment DEPLOYMENT-NAME --patch-file PATCH-FILE.YAML
+spec:
+  template: 
+    metadata: 
+      labels:
+        admission.datadoghq.com/enabled: 'true'
+        tags.datadoghq.com/env: dev
+      annotations: 
+        admission.datadoghq.com/java-lib.version: v1.10.0
