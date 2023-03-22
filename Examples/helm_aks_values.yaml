@@ -1,0 +1,45 @@
+ datadog:
+  apiKey: <DATADOG_API_KEY>
+  appKey: <DATADOG_APP_KEY>
+  # If not using secrets, then use apiKey and appKey instead
+  # apiKeyExistingSecret: <DATADOG_API_KEY_SECRET>
+  # appKeyExistingSecret: <DATADOG_APP_KEY_SECRET>
+  dd_url: us3.datadoghq.com
+  clusterName: <cluster name>
+  kubeStateMetricsEnabled: false
+  kubeStateMetricsCore:
+    enabled: true  
+
+  # kubelet configuration
+  kubelet:
+    tlsVerify:  false
+
+  processAgent:
+    processCollection: true
+
+  logs:
+    enabled: true
+    containerCollectAll: true
+
+  networkMonitoring:
+    enabled: true
+
+  apm:
+    portEnabled: true
+    socketPath: /var/run/datadog/apm.socket
+    hostSocketPath: /var/run/datadog/
+
+  systemProbe:
+    enableTCPQueueLength: false
+    enableOOMKill: true
+    collectDNSStats: false
+
+  securityAgent:
+    compliance:
+      enabled: false       
+    runtime:
+      enabled: false
+      fimEnabled: false           
+
+clusterAgent:
+  tokenExistingSecret: datadog
