@@ -41,5 +41,5 @@
       enabled: false
       fimEnabled: false           
 
-clusterAgent:
-  tokenExistingSecret: datadog
+  clusterAgent:
+    tokenExistingSecret: datadog
