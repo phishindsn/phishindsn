@@ -9,6 +9,13 @@
   kubeStateMetricsEnabled: false
   kubeStateMetricsCore:
     enabled: true  
+  env: []
+  #   - name: <ENV_VAR_NAME>
+  #     value: <ENV_VAR_VALUE>
+  # - name: DD_CONTAINER_EXCLUDE
+  #            value: "kube_namespace:*"
+  #         - name: DD_CONTAINER_INCLUDE
+  #           value: "kube_namespace:<DESIRED_NAMESPACE>"
 
   # kubelet configuration
   kubelet:
@@ -43,3 +50,5 @@
 
   clusterAgent:
     tokenExistingSecret: datadog
+    # clusterAgent.replicas -- Specify the of cluster agent replicas, if > 1 it allow the cluster agent to work in HA mode.
+    replicas: 1
