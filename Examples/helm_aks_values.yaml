@@ -30,8 +30,15 @@ env: []
   # kubelet configuration
   kubelet:
     tlsVerify:  false
-
+  
+  
+  ## Enable process agent and provide custom configs
   processAgent:
+    # datadog.processAgent.enabled -- Set this to true to enable live process monitoring agent
+    ## Note: /etc/passwd is automatically mounted to allow username resolution.
+    ## ref: https://docs.datadoghq.com/graphing/infrastructure/process/#kubernetes-daemonset
+    enabled: true
+     ## Requires processAgent.enabled to be set to true to have any effect
     processCollection: true
 
 logs:
