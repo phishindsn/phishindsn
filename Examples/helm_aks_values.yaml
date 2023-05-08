@@ -12,20 +12,18 @@
     # datadog.clusterChecks.shareProcessNamespace -- Set the process namespace sharing on the cluster checks agent
     shareProcessNamespace: false
 
-# The kubeStateMetricsEnabled option will be removed in the 4.0 version of the Datadog Agent chart.  
-kubeStateMetricsEnabled: false
+  # The kubeStateMetricsEnabled option will be removed in the 4.0 version of the Datadog Agent chart.  
+  kubeStateMetricsEnabled: false
 
-kubeStateMetricsCore:
-  # datadog.kubeStateMetricsCore.enabled -- Enable the kubernetes_state_core check in the Cluster Agent (Requires Cluster Agent 1.12.0+)
-  enabled: true  
+  kubeStateMetricsCore:
+    # datadog.kubeStateMetricsCore.enabled -- Enable the kubernetes_state_core check in the Cluster Agent (Requires Cluster Agent 1.12.0+)
+    enabled: true
 
-env: []
-  #   - name: <ENV_VAR_NAME>
-  #     value: <ENV_VAR_VALUE>
-  #   - name: DD_CONTAINER_EXCLUDE
-  #            value: "kube_namespace:*"
-  #         - name: DD_CONTAINER_INCLUDE
-  #           value: "kube_namespace:<DESIRED_NAMESPACE>"
+  ## The Datadog Agent supports many environment variables.
+    ## ref: https://docs.datadoghq.com/agent/docker/?tab=standard#environment-variables
+    env: []
+    #   - name: <ENV_VAR_NAME>
+    #     value: <ENV_VAR_VALUE>
 
   # kubelet configuration
   kubelet:
@@ -41,30 +39,32 @@ env: []
      ## Requires processAgent.enabled to be set to true to have any effect
     processCollection: true
 
-logs:
-  # datadog.logs.enabled -- Enables this to activate Datadog Agent log collection
-  enabled: true
-  ## ref: https://docs.datadoghq.com/agent/basic_agent_usage/kubernetes/#log-collection-setup
-  containerCollectAll: true
-
-  networkMonitoring:
+  ## Enable logs agent and provide custom configs
+  logs:
+    # datadog.logs.enabled -- Enables this to activate Datadog Agent log collection
     enabled: true
+    ## ref: https://docs.datadoghq.com/agent/basic_agent_usage/kubernetes/#log-collection-setup
+    containerCollectAll: true
 
-apm:
-  # datadog.apm.socketEnabled -- Enable APM over Socket (Unix Socket or windows named pipe)
-  ## ref: https://docs.datadoghq.com/agent/kubernetes/apm/
-  socketEnabled: true
-  ## ref: https://docs.datadoghq.com/agent/kubernetes/apm/
-  portEnabled: true
+    networkMonitoring:
+      enabled: true
 
-## Enable systemProbe agent and provide custom configs
-systemProbe:
-  # datadog.systemProbe.enableTCPQueueLength -- Enable the TCP queue length eBPF-based check
-  enableTCPQueueLength: false
-  # datadog.systemProbe.enableOOMKill -- Enable the OOM kill eBPF-based check
-  enableOOMKill: true
-  # datadog.systemProbe.collectDNSStats -- Enable DNS stat collection
-  collectDNSStats: true
+  ## Enable apm agent and provide custom configs
+  apm:
+    # datadog.apm.socketEnabled -- Enable APM over Socket (Unix Socket or windows named pipe)
+    ## ref: https://docs.datadoghq.com/agent/kubernetes/apm/
+    socketEnabled: true
+    ## ref: https://docs.datadoghq.com/agent/kubernetes/apm/
+    portEnabled: true
+
+  ## Enable systemProbe agent and provide custom configs
+  systemProbe:
+    # datadog.systemProbe.enableTCPQueueLength -- Enable the TCP queue length eBPF-based check
+    enableTCPQueueLength: false
+    # datadog.systemProbe.enableOOMKill -- Enable the OOM kill eBPF-based check
+    enableOOMKill: true
+    # datadog.systemProbe.collectDNSStats -- Enable DNS stat collection
+    collectDNSStats: true
 
 ## Enable security agent and provide custom configs
   securityAgent:
