@@ -4,15 +4,25 @@
   # If not using secrets, then use apiKey and appKey instead
   # apiKeyExistingSecret: <DATADOG_API_KEY_SECRET>
   # appKeyExistingSecret: <DATADOG_APP_KEY_SECRET>
-  dd_url: us3.datadoghq.com
+  site: us3.datadoghq.com
   clusterName: <cluster name>
-  kubeStateMetricsEnabled: false
-  kubeStateMetricsCore:
-    enabled: true  
-  env: []
+  clusterChecks:
+    # datadog.clusterChecks.enabled -- Enable the Cluster Checks feature on both the cluster-agents and the daemonset
+    enabled: true
+    # datadog.clusterChecks.shareProcessNamespace -- Set the process namespace sharing on the cluster checks agent
+    shareProcessNamespace: false
+
+# The kubeStateMetricsEnabled option will be removed in the 4.0 version of the Datadog Agent chart.  
+kubeStateMetricsEnabled: false
+
+kubeStateMetricsCore:
+  # datadog.kubeStateMetricsCore.enabled -- Enable the kubernetes_state_core check in the Cluster Agent (Requires Cluster Agent 1.12.0+)
+  enabled: true  
+
+env: []
   #   - name: <ENV_VAR_NAME>
   #     value: <ENV_VAR_VALUE>
-  # - name: DD_CONTAINER_EXCLUDE
+  #   - name: DD_CONTAINER_EXCLUDE
   #            value: "kube_namespace:*"
   #         - name: DD_CONTAINER_INCLUDE
   #           value: "kube_namespace:<DESIRED_NAMESPACE>"
@@ -24,31 +34,112 @@
   processAgent:
     processCollection: true
 
-  logs:
-    enabled: true
-    containerCollectAll: true
+logs:
+  # datadog.logs.enabled -- Enables this to activate Datadog Agent log collection
+  enabled: true
+  ## ref: https://docs.datadoghq.com/agent/basic_agent_usage/kubernetes/#log-collection-setup
+  containerCollectAll: true
 
   networkMonitoring:
     enabled: true
 
-  apm:
-    portEnabled: true
-    socketPath: /var/run/datadog/apm.socket
-    hostSocketPath: /var/run/datadog/
+apm:
+  # datadog.apm.socketEnabled -- Enable APM over Socket (Unix Socket or windows named pipe)
+  ## ref: https://docs.datadoghq.com/agent/kubernetes/apm/
+  socketEnabled: true
+  ## ref: https://docs.datadoghq.com/agent/kubernetes/apm/
+  portEnabled: true
 
-  systemProbe:
-    enableTCPQueueLength: false
-    enableOOMKill: true
-    collectDNSStats: false
+## Enable systemProbe agent and provide custom configs
+systemProbe:
+  # datadog.systemProbe.enableTCPQueueLength -- Enable the TCP queue length eBPF-based check
+  enableTCPQueueLength: false
+  # datadog.systemProbe.enableOOMKill -- Enable the OOM kill eBPF-based check
+  enableOOMKill: true
+  # datadog.systemProbe.collectDNSStats -- Enable DNS stat collection
+  collectDNSStats: true
 
+## Enable security agent and provide custom configs
   securityAgent:
     compliance:
-      enabled: false       
+      # datadog.securityAgent.compliance.enabled -- Set to true to enable Cloud Security Posture Management (CSPM)
+      enabled: true
     runtime:
+      # datadog.securityAgent.runtime.enabled -- Set to true to enable Cloud Workload Security (CWS)
       enabled: false
-      fimEnabled: false           
+      # datadog.securityAgent.runtime.fimEnabled -- Set to true to enable Cloud Workload Security (CWS) File Integrity Monitoring
+      fimEnabled: false
+      
+      
+## This is the Datadog Cluster Agent implementation that handles cluster-wide
+## metrics more cleanly, separates concerns for better rbac, and implements
+## the external metrics API so you can autoscale HPAs based on datadog metrics
+## ref: https://docs.datadoghq.com/agent/kubernetes/cluster/
+clusterAgent:
+  # clusterAgent.enabled -- Set this to false to disable Datadog Cluster Agent
+  enabled: true
 
-  clusterAgent:
-    tokenExistingSecret: datadog
-    # clusterAgent.replicas -- Specify the of cluster agent replicas, if > 1 it allow the cluster agent to work in HA mode.
-    replicas: 1
+  ## Define the Datadog Cluster-Agent image to work with
+  image:
+    # clusterAgent.image.name -- Cluster Agent image name to use (relative to `registry`)
+    name: cluster-agent
+
+    # clusterAgent.image.tag -- Cluster Agent image tag to use
+    tag: 7.44.0
+
+    # clusterAgent.image.digest -- Cluster Agent image digest to use, takes precedence over tag if specified
+    digest: ""
+
+    # clusterAgent.image.repository -- Override default registry + image.name for Cluster Agent
+    repository:
+
+    # clusterAgent.image.pullPolicy -- Cluster Agent image pullPolicy
+    pullPolicy: IfNotPresent
+
+    # clusterAgent.image.pullSecrets -- Cluster Agent repository pullSecret (ex: specify docker registry credentials)
+
+    ## See https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    pullSecrets: []
+    #   - name: "<REG_SECRET>"
+
+    # clusterAgent.image.doNotCheckTag -- Skip the version and chart compatibility check
+
+    ## By default, the version passed in clusterAgent.image.tag is checked
+    ## for compatibility with the version of the chart.
+    ## This boolean permits completely skipping this check.
+    ## This is useful, for example, for custom tags that are not
+    ## respecting semantic versioning.
+    doNotCheckTag:  # false
+  
+  admissionController:
+    # clusterAgent.admissionController.enabled -- Enable the admissionController to be able to inject APM/Dogstatsd config and standard tags (env, service, version) automatically into your pods
+    enabled: true
+
+    # clusterAgent.admissionController.mutateUnlabelled -- Enable injecting config without having the pod label 'admission.datadoghq.com/enabled="true"'
+    mutateUnlabelled: false
+
+    # clusterAgent.admissionController.configMode -- The kind of configuration to be injected, it can be "hostip", "service", or "socket".
+
+    ## If clusterAgent.admissionController.configMode is not set:
+    ##   * and datadog.apm.socketEnabled is true, the Admission Controller uses socket.
+    ##   * and datadog.apm.portEnabled is true, the Admission Controller uses hostip.
+    ##   * Otherwise, the Admission Controller defaults to hostip.
+    ## Note: "service" mode relies on the internal traffic service to target the agent running on the local node (requires Kubernetes v1.22+).
+    ## ref: https://docs.datadoghq.com/agent/cluster_agent/admission_controller/#configure-apm-and-dogstatsd-communication-mode
+    configMode:  # "hostip", "socket" or "service"
+
+    # clusterAgent.admissionController.failurePolicy -- Set the failure policy for dynamic admission control.'
+
+    ## The default of Ignore means that pods will still be admitted even if the webhook is unavailable to inject them.
+    ## Setting to Fail will require the admission controller to be present and pods to be injected before they are allowed to run.
+    failurePolicy: Ignore
+
+    remoteInstrumentation:
+      # clusterAgent.admissionController.remoteInstrumentation.enabled -- Enable polling and applying library injection using Remote Config (beta).
+      ## This feature is in beta, and enables Remote Config in the Cluster Agent. It also requires Cluster Agent version 7.43+.
+      ## Enabling this feature grants the Cluster Agent the permissions to patch Deployment objects in the cluster.
+      enabled: false
+
+providers:
+  aks:
+    enabled: true
