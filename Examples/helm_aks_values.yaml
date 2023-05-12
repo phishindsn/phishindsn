@@ -147,6 +147,13 @@ clusterAgent:
       ## Enabling this feature grants the Cluster Agent the permissions to patch Deployment objects in the cluster.
       enabled: false
 
+  orchestratorExplorer:
+    # datadog.orchestratorExplorer.enabled -- Set this to false to disable the orchestrator explorer
+
+    ## This requires processAgent.enabled and clusterAgent.enabled to be set to true
+    ## ref: TODO - add doc link
+    enabled: true
+
 providers:
   aks:
     enabled: true
