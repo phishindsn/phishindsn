@@ -27,6 +27,3 @@ datadog:
     runtime:
       enabled: false
       fimEnabled: false           
-
-clusterAgent:
-  enabled: true
