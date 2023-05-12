@@ -6,9 +6,6 @@ datadog:
   # appKeyExistingSecret: <DATADOG_APP_KEY_SECRET>
   site: us3.datadoghq.com
   clusterName: <cluster name>
-  kubeStateMetricsEnabled: false
-  kubeStateMetricsCore:
-    enabled: true  
 
   # kubelet configuration
   kubelet:
