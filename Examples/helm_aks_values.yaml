@@ -46,8 +46,8 @@
     ## ref: https://docs.datadoghq.com/agent/basic_agent_usage/kubernetes/#log-collection-setup
     containerCollectAll: true
 
-    networkMonitoring:
-      enabled: true
+  networkMonitoring:
+    enabled: true
 
   ## Enable apm agent and provide custom configs
   apm:
