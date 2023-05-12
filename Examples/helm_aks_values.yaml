@@ -117,6 +117,9 @@ clusterAgent:
     ## This is useful, for example, for custom tags that are not
     ## respecting semantic versioning.
     doNotCheckTag:  # false
+
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
   
   admissionController:
     # clusterAgent.admissionController.enabled -- Enable the admissionController to be able to inject APM/Dogstatsd config and standard tags (env, service, version) automatically into your pods
