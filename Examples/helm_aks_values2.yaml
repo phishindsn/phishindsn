@@ -17,10 +17,14 @@ datadog:
 
   orchestratorExplorer:
     enabled: true
-    
+
   logs:
     enabled: true
     containerCollectAll: true
 
   networkMonitoring:
+    enabled: true
+
+providers:
+  aks:
     enabled: true
