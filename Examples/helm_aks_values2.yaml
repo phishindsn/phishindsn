@@ -12,6 +12,7 @@ datadog:
     tlsVerify:  false
 
   processAgent:
+    enabled: true
     processCollection: true
 
   logs:
