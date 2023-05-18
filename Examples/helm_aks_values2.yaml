@@ -15,6 +15,9 @@ datadog:
     enabled: true
     processCollection: true
 
+  orchestratorExplorer:
+    enabled: true
+    
   logs:
     enabled: true
     containerCollectAll: true
