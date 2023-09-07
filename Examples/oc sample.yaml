@@ -1,0 +1,44 @@
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogAgent
+metadata:
+  name: datadog
+  namespace: datadog
+spec:
+  credentials:
+    apiSecret:
+      secretName: datadog-secret
+      keyName: api-key
+    appSecret:
+      secretName: datadog-secret
+      keyName: app-key
+  agent:
+    apm:
+      enabled: true
+    log:
+      enabled: true
+      logsConfigContainerCollectAll: true
+    process:
+      enabled: true
+      processCollection: true
+    security:
+      compliance:
+        enabled: false
+      runtime:
+        enabled: false
+    systemProbe:
+      bpfDebugEnabled: false
+  clusterAgent:
+    config:
+      admissionController:
+        enabled: true
+      clusterChecksEnabled: true
+      externalMetrics:
+        enabled: true
+    replicas: 2
+  clusterChecksRunner:
+    replicas: 2
+  clusterName: <CLUSTER_NAME>
+  credentials:
+    apiKey: <DATADOG_API_KEY>
+    appKey: <DATADOG_APP_KEY>
+    token: <DATADOG_CLUSTER_AGENT_TOKEN>
