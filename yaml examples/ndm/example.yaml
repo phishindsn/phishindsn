@@ -20,7 +20,7 @@ instances:
   - ip_address: 10.0.80.155
     port: 161
     snmp_version: 3
-    user: SNM
+    user: SNMP
     authProtocol: 'SHA'
     authKey: ''
     privProtocol: 'AES'
