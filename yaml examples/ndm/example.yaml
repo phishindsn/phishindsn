@@ -1,0 +1,26 @@
+init_config:
+    loader: core
+    use_device_id_as_hostname: true 
+
+## Every instance is scheduled independently of the others.
+#
+instances:
+
+  - ip_address: 172.19.250.3
+    port: 161
+    snmp_version: 3
+    user: SNMP
+    authProtocol: 'SHA'
+    authKey: ''
+    privProtocol: 'AES'
+    privKey: ''
+    tags:
+      - 'env: network'
+
+  - ip_address: 10.0.80.155
+    port: 161
+    snmp_version: 3
+    user: SNM
+    authProtocol: 'SHA'
+    authKey: ''
+    privProtocol: 'AES'
