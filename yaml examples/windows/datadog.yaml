@@ -1,8 +1,16 @@
+# Example created by https://github.com/phishindsn 
+# All available options provided by Datadog for windows, please refer to the following documents at https://docs.datadoghq.com/agent/?tab=Windows 
+# To install the agent (found in the Datadog UI) - navigate to integrations —> agent
+# See the sample config_template.yaml (https://github.com/DataDog/datadog-agent/blob/main/pkg/config/config_template.yaml) file for all available configuration options.
+# -------------------- 
+# Windows Host Agent setup - with tags, windows event logs, in
 # api key - https://app.datadoghq.com/organization-settings/api-keys
 api_key: <api_key>
 
 # datadog site - https://docs.datadoghq.com/getting_started/site/
-site: datadoghq.com
+site: <datadoghq.com>
+
+env: <dev>
 
 # logs - needed for windows events - https://docs.datadoghq.com/integrations/win32_event_log
 logs_enabled: true
@@ -20,4 +28,5 @@ process_config:
   process_collection:
     enabled: "true"
 
-
+# The agent also supports additional core integrations that support the core set of checks in which can be performed by the same datadog service
+# Additional checks can be configured at the agent configuration file - https://github.com/DataDog/integrations-core 
